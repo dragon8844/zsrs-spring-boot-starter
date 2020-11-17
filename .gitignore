@@ -1,0 +1,10 @@
+*.iml
+*.ipr
+*.iws
+.git
+.idea
+target/
+*.class
+.DS_Store
+logs
+*.versionsBackup
