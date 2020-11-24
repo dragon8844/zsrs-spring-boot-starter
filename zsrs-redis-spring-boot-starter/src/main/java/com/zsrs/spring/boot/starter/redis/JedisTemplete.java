@@ -15,6 +15,7 @@ import java.util.Set;
  * @author LiLong
  * @date 2020/11/16
  */
+@SuppressWarnings(value = "ALL")
 public class JedisTemplete {
 
     private JedisPool jedisPool;
@@ -37,15 +38,17 @@ public class JedisTemplete {
     }
 
     public Jedis getJedis(){
+        Jedis jedis = null;
         try {
             if (jedisPool != null) {
-                Jedis resource = jedisPool.getResource();
-                return resource;
+                jedis = jedisPool.getResource();
+                return jedis;
             } else {
-                return null;
+                throw new RuntimeException("jedisPool is not get ready~");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            jedis.close();
             return null;
         }
     }
@@ -69,9 +72,16 @@ public class JedisTemplete {
      * @return
      */
     public String get(String key) {
-        log.debug("Get value from redis, the key:{}.", prefix + key);
+        log.debug(" 获取指定key的值,如果key不存在返回null, key:{}.", prefix + key);
         Jedis jedis = getJedis();
-        String value = jedis.get(prefix + key);
+        String value = null;
+        try{
+         value = jedis.get(prefix + key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
         return value;
     }
 
@@ -83,9 +93,18 @@ public class JedisTemplete {
      * @return
      */
     public String set(String key, String value) {
-        log.debug("Set the value to redis, the key:{}, the value:{}.",prefix + key,value);
+        log.debug("设置key的值为value key:{}, value:{}.",prefix + key,value);
         Jedis jedis = getJedis();
-        return jedis.set(prefix + key, value);
+
+        String result = null;
+        try{
+            result = jedis.set(prefix + key, value);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -95,9 +114,17 @@ public class JedisTemplete {
      * @return
      */
     public Long del(String key) {
-        log.debug("Del the redis, this key:{}", prefix + key);
+        log.debug("删除指定的key, key:{}", prefix + key);
         Jedis jedis = getJedis();
-        return jedis.del(prefix + key);
+        Long result = null;
+        try{
+            result = jedis.del(prefix + key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -119,8 +146,17 @@ public class JedisTemplete {
      * @return
      */
     public Boolean exists(String key) {
+        log.debug("判断key是否存在, key:{}",key);
         Jedis jedis = getJedis();
-        return jedis.exists(prefix + key);
+        Boolean result = null;
+        try{
+            result = jedis.exists(prefix + key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -131,8 +167,17 @@ public class JedisTemplete {
      * @return
      */
     public Long setnx(String key, String value) {
+        log.debug("设置key value,如果key已经存在则返回,key:{},value:{}", key,value);
         Jedis jedis = getJedis();
-        return jedis.setnx(prefix + key, value);
+        Long result = null;
+        try{
+            result = jedis.setnx(prefix + key, value);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -144,9 +189,19 @@ public class JedisTemplete {
      * @return
      */
     public String setex(String key, int seconds, String value) {
+        log.debug("设置key value并指定这个键值的有效期，单位秒, key:{}, seconds:{}, value:{}", key, seconds, value);
         Jedis jedis = getJedis();
-        return jedis.setex(prefix + key, seconds, value);
+        String result = null;
+        try{
+            result = jedis.setex(prefix + key, seconds, value);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
+
 
     /**
      * 通过key 和offset 从指定的位置开始将原先value替换
@@ -193,8 +248,17 @@ public class JedisTemplete {
      * @return
      */
     public Long incr(String key) {
+        log.debug("通过key 对value进行加值+1操作, key:{}", key);
         Jedis jedis = getJedis();
-        return jedis.incr(prefix + key);
+        Long result = null;
+        try{
+            result = jedis.incr(prefix + key);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -301,8 +365,17 @@ public class JedisTemplete {
      * @return
      */
     public Long expire(String key, int seconds) {
+        log.debug("设置key的超时时间为seconds, key:{}, seconds:{}.", key, seconds);
         Jedis jedis = getJedis();
-        return jedis.expire(prefix + key, seconds);
+        Long result = null;
+        try{
+            result = jedis.expire(prefix + key, seconds);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return result;
     }
 
     /**
@@ -313,8 +386,17 @@ public class JedisTemplete {
      * @return
      */
     public List<String> hmget(String key, String... fields) {
+        log.debug("通过key 和 fields 获取指定的value, key:{}, fields:{}", key, fields);
         Jedis jedis = getJedis();
-        return jedis.hmget(prefix + key, fields);
+        List<String> retList = null;
+        try{
+            retList = jedis.hmget(prefix + key, fields);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }finally {
+            close(jedis);
+        }
+        return retList;
     }
 
     /**

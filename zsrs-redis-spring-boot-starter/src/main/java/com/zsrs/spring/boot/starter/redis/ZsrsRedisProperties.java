@@ -71,8 +71,15 @@ public class ZsrsRedisProperties {
      */
     public JedisPool getJedisPool(){
         JedisPoolConfig config = new JedisPoolConfig();
-        //省略具体设置
-
+        config.setMaxWaitMillis(20000);
+        config.setMaxIdle(100);
+        config.setMinIdle(1);
+        config.setNumTestsPerEvictionRun(10);
+        config.setTestOnBorrow(true);
+        config.setTestOnReturn(true);
+        config.setTestWhileIdle(true);
+        config.setTestOnCreate(false);
+        config.setTimeBetweenEvictionRunsMillis(30000);
         JedisPool myJedisPool = new JedisPool(config, host, port, timeout, password);
         return myJedisPool;
     }
