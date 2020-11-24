@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>zsrs-redis-spring-boot-starter</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
 
     <dependencies>
 

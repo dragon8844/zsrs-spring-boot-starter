@@ -136,7 +136,7 @@ public class JedisTemplete {
     }
 
     /**
-     * 设置key value并指定这个键值的有效期
+     * 设置key value并指定这个键值的有效期，单位秒
      *
      * @param key
      * @param seconds
