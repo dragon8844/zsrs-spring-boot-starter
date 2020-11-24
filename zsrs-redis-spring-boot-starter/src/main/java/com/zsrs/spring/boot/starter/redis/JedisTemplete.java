@@ -2,7 +2,6 @@ package com.zsrs.spring.boot.starter.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -423,20 +422,6 @@ public class JedisTemplete {
         return jedis.rpush(prefix + key, strs);
     }
 
-    /**
-     * 通过key在list指定的位置之前或者之后 添加字符串元素
-     *
-     * @param key
-     * @param where LIST_POSITION枚举类型
-     * @param pivot list里面的value
-     * @param value 添加的value
-     * @return
-     */
-    public Long linsert(String key, BinaryClient.LIST_POSITION where,
-                        String pivot, String value) {
-        Jedis jedis = getJedis();
-        return jedis.linsert(prefix + key, where, pivot, value);
-    }
 
     /**
      * 通过key设置list指定下标位置的value
